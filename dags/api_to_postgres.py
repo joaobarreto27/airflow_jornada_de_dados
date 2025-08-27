@@ -1,7 +1,7 @@
 
 from airflow.decorators import task, dag #type:ignore 
 
-from include.src.controller import gerar_numero_aleatorio, fetch_pokemon_data, add_pokemon_to_db
+from include.controller import gerar_numero_aleatorio, fetch_pokemon_data, add_pokemon_to_db
 
 from datetime import datetime
 
@@ -34,6 +34,6 @@ def api_postgres():
     t3 = task_add_pokemon_to_db(t2)
     t4 = print_de_sucesso(t3)
 
-    t1 >> t2 >> t3 >> t4
+    t1 >> t2 >> t3 >> t4 #type:ignore
 
 dag = api_postgres()
