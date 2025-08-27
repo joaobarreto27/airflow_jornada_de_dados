@@ -1,7 +1,7 @@
 import requests
-from db import SessionLocal, engine, Base
-from models import Pokemon
-from schema import PokemonSchema
+from include.db import SessionLocal, engine, Base
+from include.models import Pokemon
+from include.schema import PokemonSchema
 from random import randint
 
 Base.metadata.create_all(bind=engine)
@@ -14,13 +14,18 @@ def fetch_pokemon_data(pokemon_id: int):
     if response.status_code == 200:
         data = response.json()
         types = ', '.join(type['type']['name'] for type in data['types'])
-        return PokemonSchema(name=data['name'], type=types)
+        pokemon = PokemonSchema(name=data['name'], type=types)
+        return pokemon.__dict__   # retorna dict em vez do objeto
     else:
         return None
 
-def add_pokemon_to_db(pokemon_schema: PokemonSchema) -> Pokemon:
+def add_pokemon_to_db(pokemon_dict: dict) -> Pokemon:
+    pokemon_schema = PokemonSchema(**pokemon_dict)
     with SessionLocal() as db:
-        db_pokemon = Pokemon(name=pokemon_schema.name, type=pokemon_schema.type)
+        db_pokemon = Pokemon(
+            name=pokemon_schema.name,
+            type=pokemon_schema.type
+        )
         db.add(db_pokemon)
         db.commit()
         db.refresh(db_pokemon)

@@ -4,3 +4,4 @@ requests==2.32.5
 sqlalchemy>=1.4.49,<1.4.55
 python-dotenv>=0.21.0,<0.22.0
 pydantic==2.11.7
+psycopg2-binary==2.9.10
